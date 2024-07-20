@@ -1,15 +1,15 @@
 #include <iostream>
-#include <string>
 #include "vm/vm.h"
 
 using namespace std;
 using namespace paulq::volga;
 
 int main(){
-	string name;
+	vm_byte rom[] = {
+		0x40, 0x41, 0x00, 0x90, 0x00, 0x00, 0x90,
+		0x40, 0x0A, 0x00, 0x90, 0x00, 0x00, 0x90
+	};
 	volgavm vm = volgavm();
-	cout << vm.hello() << '\n';
-	cout << "What's your name?\n";
-	cin >> name;
-	cout << "Hello, " << name << "!\n";
+	vm.load(rom, size(rom));
+	vm.run();
 }
