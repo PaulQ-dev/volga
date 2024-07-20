@@ -1,33 +1,37 @@
-.PHONY: all clean clean_bin clean_obj clean_all run run_only
+.PHONY: all clean clean_bin run_vm run_only_vm run_asm run_only_asm
 
-GXX-O = g++ -c -o
 GXX = g++ -o
+GDB = gdb
 
 VOLGA = src/volga
+VOLGA_ASM = src/volga-asm
 
-all: volga
+VOLGA_FILES = $(VOLGA)/main.cpp $(VOLGA)/vm/*.cpp
+VOLGA_ASM_FILES = $(VOLGA_ASM)/main.cpp $(VOLGA_ASM)/asm/*.cpp $(VOLGA_ASM)/d_asm/*.cpp
+
+all: clean volga volga-asm
 
 clean_bin:
 	@rm -f bin/volga
+	@rm -f bin/volga-asm
 	@rm -f bin/*.so
 	@echo "Binaries cleaned"
-clean_obj:
-	@rm -f obj/*.o
-	@echo "Object files cleaned"
-clean: clean_obj
-clean_all: clean_obj clean_bin
+clean: clean_bin
 
-main.o:
-	@echo "GXX $(VOLGA)/main.cpp -> obj/volga.o"
-	@$(GXX-O) obj/$@ $(VOLGA)/main.cpp  -I $(VOLGA)
-vm.o:
-	@echo "GXX $(VOLGA)/vm/vm.cpp -> obj/vm.o"
-	@$(GXX-O) obj/$@ $(VOLGA)/vm/vm.cpp -I $(VOLGA)
+volga:
+	@echo "Compiling volga"
+	@$(GXX) bin/$@ $(VOLGA_FILES) -I $(VOLGA) && echo "Done! Written to ./bin/volga"
+volga_debug:
+	$(GXX) bin/$@ $(VOLGA_FILES) -I $(VOLGA) -g
+	$(GDB) bin/$@
 
-volga: clean_obj main.o vm.o
-	@echo "LD  obj/main.o obj/vm.o -> bin/volga"
-	@$(GXX) bin/volga obj/main.o obj/vm.o -I $(VOLGA)
+volga_asm: 
+	@ehco "Not Implemented"
 
-run_only:
+run_only_vm:
 	@./bin/volga
-run: volga run_only
+run_vm: volga run_only_vm
+
+run_only_asm:
+	@./bin/volga-asm
+run_asm: volga-asm run_only_asm
