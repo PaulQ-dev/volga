@@ -26,3 +26,5 @@ Prerequisites:
 Process:
 1. Clone source code
 2. Run `make volga_debug`
+## DOCUMENTATION
+Documentation can be found [here](docs/Main.md)
