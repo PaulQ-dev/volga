@@ -70,13 +70,12 @@ int volgavm::run(){
             case 0x40:
                 _dataBuff0 = read(_progCount++);
                 _dataBuff1 = read(_progCount++);
-                _dataBuff1 = _dataBuff1 >> 4;
-                regs[_dataBuff1] = _dataBuff0;
+                regs[_dataBuff1 & 0xF] = _dataBuff0;
                 break;
             case 0x90:
                 _dataBuff1 = read(_progCount++);
                 _addrBuff0 = readAddr(_progCount++);
-                _dataBuff0 = regs[_dataBuff1];
+                _dataBuff0 = regs[_dataBuff1 & 0xF];
                 write(_addrBuff0, _dataBuff0);
                 break;
             case 0xB0:
