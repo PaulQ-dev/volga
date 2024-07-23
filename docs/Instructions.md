@@ -4,6 +4,7 @@ Main documentation [here](Main.md)
 ### NOTATIONS
 + `#` - Single byte
 + `##` - Two bytes in little-endian
++ `b` - Lower nibble (half-byte)
 + `a` - Address (Similar to `##`, but has different meaning)
 + `r` - Any 8-bit register
 + `rX` - Any 8-bit register (if instruction uses multiple), X goes from 0 to 9
