@@ -2,7 +2,6 @@
 
 MAKE = make
 GXX = g++
-GDB = gdb
 
 VOLGA = src/volga
 VOLGA_ASM = src/volga-asm
@@ -15,7 +14,6 @@ all: version clean volga volga-asm
 version:
 	@echo "MAKE:" && $(MAKE) --version
 	@echo "GXX:" && $(GXX) --version
-	@echo "GDB:" && $(GDB) --version
 
 clean_bin:
 	@rm -f bin/volga
@@ -27,9 +25,6 @@ clean: clean_bin
 volga:
 	@echo "Compiling volga"
 	@$(GXX) -o bin/$@ $(VOLGA_FILES) -I $(VOLGA) && echo "Done! Written to ./bin/volga"
-volga_debug:
-	$(GXX) -o bin/$@ $(VOLGA_FILES) -I $(VOLGA) -g
-	$(GDB) bin/$@
 
 volga_asm: 
 	@ehco "Not Implemented"
