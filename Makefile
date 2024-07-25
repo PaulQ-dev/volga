@@ -1,7 +1,7 @@
 .PHONY: all clean clean_bin run_vm run_only_vm run_asm run_only_asm version
 
 MAKE = make
-GXX = g++
+GXX = g++ -std=c++20
 
 VOLGA = src/volga
 VOLGA_ASM = src/volga-asm
