@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdio.h>
+#include <iostream>
 #include <stdint.h>
 #include <string>
 #include <cstring>
@@ -19,12 +20,14 @@ namespace paulq::volga{
 		vm_addr aRegs[4];
 		vm_addr _addrBuff0, _addrBuff1, _progCount;
 
+		const vm_addr halt = 0x8FFF;
 		const vm_addr con_out = 0x9000;
 		memory_block zp, ram, stack, rom;
 		const int mem_len = 0x10000;
 
 		vm_byte read(vm_addr address); void write(vm_addr address, vm_byte data);
 		vm_addr readAddr(vm_addr address); void writeAddr(vm_addr address, vm_addr data);
+		vm_byte readPC(); vm_addr readAddrPC();
 		vm_byte pull(); void push(vm_byte data);
 		vm_addr pullAddr(); void pushAddr(vm_addr data);
 	public:

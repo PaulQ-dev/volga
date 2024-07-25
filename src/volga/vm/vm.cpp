@@ -30,8 +30,9 @@ vm_byte volgavm::read(vm_addr address){
     return _readBuff;
 }
 void volgavm::write(vm_addr address, vm_byte data){
-    if(address == con_out) printf("%c",data);
-    else if(address <= stack.end || address == con_out) memory[address] = data; 
+    if(address == con_out) { memory[address] = data; cout << data; }
+    if(address == halt) { _procFlags = _procFlags | 0b00000001; _dataBuff0 = data; }
+    else if(address <= stack.end) memory[address] = data; 
 }
 vm_addr volgavm::readAddr(vm_addr address){
     return read(address) | (read(address + 1) << 8);
@@ -39,6 +40,16 @@ vm_addr volgavm::readAddr(vm_addr address){
 void volgavm::writeAddr(vm_addr address, vm_addr data){
     write(address, (vm_byte)(data & 0xFF));
     write(address + 1, (vm_byte)(data >> 8));
+}
+vm_byte volgavm::readPC(){
+    vm_byte result = read(_progCount);
+    _progCount++;
+    return result;
+}
+vm_addr volgavm::readAddrPC(){
+    vm_addr result = readAddr(_progCount);
+    _progCount+=2;
+    return result;
 }
 
 vm_byte volgavm::pull(){
@@ -61,31 +72,38 @@ void volgavm::pushAddr(vm_addr data){
 int volgavm::run(){
     _progCount = rom.start;
     while(true){
-        read(_progCount++);
+        readPC();
         if(_readBuff >> 4 == 0){
             return _readBuff & 0x0F;
         } else {
             switch (_readBuff)
             {
             case 0x40:
-                _dataBuff0 = read(_progCount++);
-                _dataBuff1 = read(_progCount++);
+                _dataBuff0 = readPC();
+                _dataBuff1 = readPC();
                 regs[_dataBuff1 & 0xF] = _dataBuff0;
                 break;
             case 0x90:
-                _dataBuff1 = read(_progCount++);
-                _addrBuff0 = readAddr(_progCount++);
+                _dataBuff1 = readPC();
+                _addrBuff0 = readAddrPC();
                 _dataBuff0 = regs[_dataBuff1 & 0xF];
                 write(_addrBuff0, _dataBuff0);
                 break;
             case 0xB0:
-                _addrBuff0 = readAddr(_progCount++);
+                _dataBuff1 = readPC();
+                _dataBuff0 = readPC();
+                if(regs[_dataBuff1 & 0xF] == _dataBuff0) goto jp_a;
+                break;
+            case 0xD0:
+            jp_a:
+                _addrBuff0 = readAddrPC();
                 _progCount = _addrBuff0;
                 break;
             default:
                 break;
             }
         }
+        if(_procFlags & 0b00000001 == 1) return _dataBuff0;
     }
 }
 
