@@ -34,3 +34,8 @@
 # Build folders
 bin/
 obj/
+
+# Debugging scripts
+*debug*.sh
+*debug*.bat
+*debug*.cmd
