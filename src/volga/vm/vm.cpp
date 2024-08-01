@@ -73,29 +73,29 @@ int volgavm::run(){
     _progCount = rom.start;
     while(true){
         readPC();
-        if(_readBuff >> 4 == 0){
+        if(_readBuff >> 4 == 0){ //ht b
             return _readBuff & 0x0F;
         } else {
             switch (_readBuff)
             {
-            case 0x40:
+            case 0x40: //ld #,r
                 _dataBuff0 = readPC();
                 _dataBuff1 = readPC();
                 regs[_dataBuff1 & 0xF] = _dataBuff0;
                 break;
-            case 0x90:
+            case 0x90: //st r,a
                 _dataBuff1 = readPC();
                 _addrBuff0 = readAddrPC();
                 _dataBuff0 = regs[_dataBuff1 & 0xF];
                 write(_addrBuff0, _dataBuff0);
                 break;
-            case 0xB0:
+            case 0xB0: //bre r,#,a
                 _dataBuff1 = readPC();
                 _dataBuff0 = readPC();
-                if(regs[_dataBuff1 & 0xF] == _dataBuff0) goto jp_a;
+                if(regs[_dataBuff1 & 0xF] == _dataBuff0) goto jump_to_read_address;
                 break;
-            case 0xD0:
-            jp_a:
+            case 0xD0: //jp a
+            jump_to_read_address:
                 _addrBuff0 = readAddrPC();
                 _progCount = _addrBuff0;
                 break;
