@@ -35,5 +35,6 @@ namespace paulq::volga{
 		int load(vm_byte* rom, short rom_len); int load(FILE* file); int load(string file);
 
 		volgavm();
+		~volgavm();
 	};
 }

@@ -132,3 +132,6 @@ volgavm::volgavm(){
     rom.start = 0xA000;
     rom.end = 0xFFFF;
 }
+volgavm::~volgavm(){
+    free(memory);
+}
