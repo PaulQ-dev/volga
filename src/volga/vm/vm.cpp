@@ -89,6 +89,11 @@ int volgavm::run(){
                 _dataBuff0 = regs[_dataBuff1 & 0xF];
                 write(_addrBuff0, _dataBuff0);
                 break;
+            case 0xA0: //add #,r
+                _dataBuff0 = readPC();
+                _dataBuff1 = readPC();
+                regs[_dataBuff1 & 0xF] += _dataBuff0;
+                break;
             case 0xB0: //bre r,#,a
                 _dataBuff1 = readPC();
                 _dataBuff0 = readPC();
