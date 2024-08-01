@@ -92,6 +92,8 @@ int volgavm::run(){
             case 0xA0: //add #,r
                 _dataBuff0 = readPC();
                 _dataBuff1 = readPC();
+                if((regs[_dataBuff1 & 0xF] + _dataBuff0) > 0xFF ) _procFlags = _procFlags | (1 << 7);
+                else _procFlags = _procFlags & (0xFF^(1 << 7));
                 regs[_dataBuff1 & 0xF] += _dataBuff0;
                 break;
             case 0xB0: //bre r,#,a
@@ -121,7 +123,7 @@ volgavm::volgavm(){
         aRegs[i] = 0x0000;
     }
     memory = (vm_byte*)calloc(mem_len,1);
-    _procFlags = 0b00000000;
+    _procFlags = 0b00000000; //CZN----H
     _stackPtr = 0x00;
     _readBuff = 0x00;
     _dataBuff0 = 0x00;
