@@ -80,26 +80,26 @@ int volgavm::run(){
             {
             case 0x40: //ld #,r
                 _dataBuff0 = readPC();
-                _dataBuff1 = readPC();
-                regs[_dataBuff1 & 0xF] = _dataBuff0;
+                _dataBuff1 = readPC() & 0xF;
+                regs[_dataBuff1] = _dataBuff0;
                 break;
             case 0x90: //st r,a
-                _dataBuff1 = readPC();
+                _dataBuff1 = readPC() & 0xF;
                 _addrBuff0 = readAddrPC();
-                _dataBuff0 = regs[_dataBuff1 & 0xF];
+                _dataBuff0 = regs[_dataBuff1];
                 write(_addrBuff0, _dataBuff0);
                 break;
             case 0xA0: //add #,r
                 _dataBuff0 = readPC();
-                _dataBuff1 = readPC();
-                if((regs[_dataBuff1 & 0xF] + _dataBuff0) > 0xFF ) _procFlags = _procFlags | (1 << 7);
+                _dataBuff1 = readPC() & 0xF;
+                if((regs[_dataBuff1] + _dataBuff0) > 0xFF ) _procFlags = _procFlags | (1 << 7);
                 else _procFlags = _procFlags & (0xFF^(1 << 7));
-                regs[_dataBuff1 & 0xF] += _dataBuff0;
+                regs[_dataBuff1] += _dataBuff0;
                 break;
             case 0xB0: //bre r,#,a
                 _dataBuff1 = readPC();
-                _dataBuff0 = readPC();
-                if(regs[_dataBuff1 & 0xF] == _dataBuff0) goto jump_to_read_address;
+                _dataBuff0 = readPC() & 0xF;
+                if(regs[_dataBuff1] == _dataBuff0) goto jump_to_read_address;
                 break;
             case 0xD0: //jp a
             jump_to_read_address:
