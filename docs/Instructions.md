@@ -17,4 +17,4 @@ Main documentation [here](Main.md)
 + `ld #,r` - Load `#` into `r`. In bytecode: `$40`. Operands: `#` - byte to be loaded, `r` - destination register (`$0`-`$F`).
 + `st r,a` - Store `r` at `a`. In bytecode: `$90`. Operands: `r` - source register (`$0`-`$F`), `a` - destination address.
 + `jp a` - Jump execution to `a` (Changes program counter to `a`). In bytecode: `$D0`. Operands: `a` - new execution address.
-+ `bri r,#,a` - If value of `r` equals `#`, then jump to `a`. In bytecode: `$B0`. Operands: `r` - register to compare, `#` - value to compare, `a` - new execution address
++ `bre r,#,a` - If value of `r` equals `#`, then jump to `a`. In bytecode: `$B0`. Operands: `r` - register to compare, `#` - value to compare, `a` - new execution address
