@@ -17,7 +17,7 @@ Prerequisites:
 
 Process:
 1. Clone source code
-2. Run `make run_vm` to build and run or `make run_only_vm` to skip building
+2. Run `make build_run_vm` to build and run or `make run_vm` to skip building
 
 ### DOCUMENTATION
 Documentation can be found [here](docs/Main.md)
