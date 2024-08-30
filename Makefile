@@ -1,15 +1,15 @@
-.PHONY: all clean clean_bin run_vm run_only_vm run_asm run_only_asm version
+.PHONY: all clean clean_bin clean_ojb build_run_vm run_vm build_run_asm run_asm version
 
 MAKE = make
 GXX = g++ -std=c++20
 
 VOLGA = src/volga
+OBJ_VOLGA = obj/volga
+
 VOLGA_ASM = src/volga-asm
+OBJ_VOLGA_ASM = obj/volga-asm
 
-VOLGA_FILES = $(VOLGA)/main.cpp $(VOLGA)/vm/*.cpp
-VOLGA_ASM_FILES = $(VOLGA_ASM)/main.cpp $(VOLGA_ASM)/asm/*.cpp $(VOLGA_ASM)/d_asm/*.cpp
-
-all: version clean volga volga-asm
+all: version clean volga volga_asm
 
 version:
 	@echo "MAKE:" && $(MAKE) --version
@@ -20,19 +20,40 @@ clean_bin:
 	@rm -f bin/volga-asm
 	@rm -f bin/*.so
 	@echo "Binaries cleaned"
-clean: clean_bin
+clean_obj:
+	@rm -f $(OBJ_VOLGA)/*.o
+	@rm -f $(OBJ_VOLGA_ASM)/*.o
+	@echo "Object files cleaned"
+clean: clean_bin clean_obj
 
-volga:
-	@echo "Compiling volga"
-	@$(GXX) -o bin/$@ $(VOLGA_FILES) -I $(VOLGA) && echo "Done! Written to ./bin/volga"
-
-volga_asm: 
-	@ehco "Not Implemented"
-
-run_only_vm:
+obj/volga/main.o: src/volga/main.cpp
+	@echo "Compiling src/volga/main.cpp"
+	@$(GXX) -c -o $@ $<
+obj/volga/vm.o: src/volga/vm/vm.cpp
+	@echo "Compiling src/volga/vm/vm.cpp"
+	@$(GXX) -c -o $@ $<
+obj/volga/mem.o: src/volga/vm/mem.cpp
+	@echo "Compiling src/volga/vm/mem.cpp"
+	@$(GXX) -c -o $@ $<
+volga: obj/volga/main.o obj/volga/vm.o obj/volga/mem.o
+	@echo "Combining volga"
+	@$(GXX) -o bin/volga $^
+run_vm:
 	@./bin/volga
-run_vm: volga run_only_vm
+build_run_vm: volga run_vm
 
-run_only_asm:
-	@./bin/volga-asm
-run_asm: volga-asm run_only_asm
+obj/volga-asm/main.o: src/volga-asm/main.cpp
+	@echo "Compiling src/volga-asm/main.cpp"
+	@$(GXX) -c -o $@ $<
+obj/volga-asm/d_asm.o: src/volga-asm/d_asm/d_asm.cpp
+	@echo "Compiling src/volga-asm/d_asm/d_asm.cpp"
+	@$(GXX) -c -o $@ $<
+obj/volga-asm/asm.o: src/volga-asm/asm/asm.cpp
+	@echo "Compiling src/volga-asm/asm/asm.cpp"
+	@$(GXX) -c -o $@ $<
+volga_asm: obj/volga-asm/main.o obj/volga-asm/d_asm.o obj/volga-asm/asm.o
+	@echo "Combining volga-asm"
+	@$(GXX) -o bin/volga-asm $^
+run_asm:
+	@./bin/volga
+build_run_asm: volga run_vm

@@ -39,3 +39,6 @@ obj/
 *debug*.sh
 *debug*.bat
 *debug*.cmd
+
+# Makefile generation
+*GenMake*
