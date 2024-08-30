@@ -19,6 +19,7 @@ Main documentation [here](Main.md)
 #### NAVIGATION
 + `jp a` - Jump execution to `a` (Changes program counter to `a`). In bytecode: `$D0`. Operands: `a` - new execution address.
 + `bre r,#,a` - If value of `r` equals `#`, then jump to `a`. In bytecode: `$B0`. Operands: `r` - register to compare, `#` - value to compare, `a` - new execution address.
++ `bcc a` - If Carry flag is clear then jump to `a`. In bytecode: `$C0`. Operands: `a` - new execution address.
 #### ARITHMETIC
 + `add #,r` - Add `#` to value in `r`, if result is greater, than 255, then carry is set, otherwise - reset. In bytecode: `$A0`. Operands: `#` - value to add, `r` - register to add.
 #### OTHER
