@@ -2,29 +2,6 @@
 
 using namespace paulq::volga;
 
-int volga_vm::load(vm_byte* rom_bytes, short rom_len){
-    if(rom_len > rom_blk.end - rom_blk.start) return 1;
-    else if(rom_len < 1) return -1;
-    else{
-        memcpy(memory + rom_blk.start, rom_bytes, rom_len);
-        return 0;
-    }
-}
-int volga_vm::load(FILE* file){
-    fseek(file, 0L, SEEK_END);
-    short size = ftell(file);
-    rewind(file);
-    vm_byte rom[size] = {0};
-    fread(rom, size, 1, file);
-    return load(rom, size);
-}
-int volga_vm::load(string file){
-    FILE* f = fopen(file.c_str(), "r");
-    int retVal = load(f);
-    fclose(f);
-    return retVal;
-}
-
 vm_byte volga_vm::read(vm_addr address){
     if(address <= stack_blk.end || address == con_out || address >= rom_blk.start) rdB = memory[address];
     return rdB;
