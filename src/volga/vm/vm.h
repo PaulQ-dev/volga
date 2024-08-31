@@ -5,12 +5,12 @@
 #include <stdint.h>
 #include <string>
 #include <cstring>
-#include "mem.h"
+#include "../mem.h"
 
 using namespace std;
 
 namespace paulq::volga{
-	class volgavm{
+	class volga_vm{
 	private:
 		vm_byte* memory;
 		vm_byte* stack;
@@ -41,7 +41,7 @@ namespace paulq::volga{
 		int run();
 		int load(vm_byte* rom, short rom_len); int load(FILE* file); int load(string file);
 
-		volgavm();
-		~volgavm();
+		volga_vm();
+		~volga_vm();
 	};
 }

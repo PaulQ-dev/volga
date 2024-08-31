@@ -2,7 +2,7 @@
 
 using namespace paulq::volga;
 
-int volgavm::load(vm_byte* rom_bytes, short rom_len){
+int volga_vm::load(vm_byte* rom_bytes, short rom_len){
     if(rom_len > rom_blk.end - rom_blk.start) return 1;
     else if(rom_len < 1) return -1;
     else{
@@ -10,7 +10,7 @@ int volgavm::load(vm_byte* rom_bytes, short rom_len){
         return 0;
     }
 }
-int volgavm::load(FILE* file){
+int volga_vm::load(FILE* file){
     fseek(file, 0L, SEEK_END);
     short size = ftell(file);
     rewind(file);
@@ -18,58 +18,58 @@ int volgavm::load(FILE* file){
     fread(rom, size, 1, file);
     return load(rom, size);
 }
-int volgavm::load(string file){
+int volga_vm::load(string file){
     FILE* f = fopen(file.c_str(), "r");
     int retVal = load(f);
     fclose(f);
     return retVal;
 }
 
-vm_byte volgavm::read(vm_addr address){
+vm_byte volga_vm::read(vm_addr address){
     if(address <= stack_blk.end || address == con_out || address >= rom_blk.start) _readBuff = memory[address];
     return _readBuff;
 }
-void volgavm::write(vm_addr address, vm_byte data){
+void volga_vm::write(vm_addr address, vm_byte data){
     if(address == con_out) { memory[address] = data; cout << data; }
     if(address == halt) { _procFlags = _procFlags | _haltFlag; _dataBuff0 = data; }
     else if(address <= stack_blk.end) memory[address] = data; 
 }
-vm_addr volgavm::readAddr(vm_addr address){
+vm_addr volga_vm::readAddr(vm_addr address){
     return read(address) | (read(address + 1) << 8);
 }
-void volgavm::writeAddr(vm_addr address, vm_addr data){
+void volga_vm::writeAddr(vm_addr address, vm_addr data){
     write(address, (vm_byte)(data & 0xFF));
     write(address + 1, (vm_byte)(data >> 8));
 }
-vm_byte volgavm::readPC(){
+vm_byte volga_vm::readPC(){
     vm_byte result = read(_progCount);
     _progCount++;
     return result;
 }
-vm_addr volgavm::readAddrPC(){
+vm_addr volga_vm::readAddrPC(){
     vm_addr result = readAddr(_progCount);
     _progCount+=2;
     return result;
 }
 
-vm_byte volgavm::pull(){
+vm_byte volga_vm::pull(){
     _readBuff = stack[_stackPtr];
     _stackPtr--;
     return _readBuff;
 }
-void volgavm::push(vm_byte data){
+void volga_vm::push(vm_byte data){
     _stackPtr++;
     stack[_stackPtr] = data;
 }
-vm_addr volgavm::pullAddr(){
+vm_addr volga_vm::pullAddr(){
     return pull() | (pull() << 8);
 }
-void volgavm::pushAddr(vm_addr data){
+void volga_vm::pushAddr(vm_addr data){
     push((vm_byte)(data & 0xFF));
     push((vm_byte)(data >> 8));
 }
 
-int volgavm::run(){
+int volga_vm::run(){
     _progCount = rom_blk.start;
     while(true){
         readPC();
@@ -120,7 +120,7 @@ int volgavm::run(){
 }
 
 
-volgavm::volgavm(){
+volga_vm::volga_vm(){
     _procFlags = 0b00000000; //CZN----H
     _stackPtr = 0x00;
     _readBuff = 0x00;
@@ -145,6 +145,6 @@ volgavm::volgavm(){
     memory = (vm_byte*)calloc(mem_len,1);
     stack = memory + stack_blk.start;
 }
-volgavm::~volgavm(){
+volga_vm::~volga_vm(){
     free(memory);
 }
