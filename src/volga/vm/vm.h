@@ -41,6 +41,8 @@ namespace paulq::volga{
 		int run();
 		int load(vm_byte* rom, short rom_len); int load(FILE* file); int load(string file);
 
+		static int run(vm_byte* rom, short rom_len); static int run(FILE* file); static int run(string file);
+
 		volga_vm();
 		~volga_vm();
 	};

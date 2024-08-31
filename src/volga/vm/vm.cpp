@@ -25,6 +25,26 @@ int volga_vm::load(string file){
     return retVal;
 }
 
+int volga_vm::run(vm_byte* rom, short rom_len){
+    volga_vm vm = volga_vm();
+    int ret = vm.load(rom, rom_len);
+    if (ret != 0) return ret;
+    return vm.run();
+}
+int volga_vm::run(FILE* file){
+    volga_vm vm = volga_vm();
+    int ret = vm.load(file);
+    if (ret != 0) return ret;
+    return vm.run();
+}
+int volga_vm::run(string file){
+
+    volga_vm vm = volga_vm();
+    int ret = vm.load(file);
+    if (ret != 0) return ret;
+    return vm.run();
+}
+
 int volga_vm::run(){
     pC = rom_blk.start;
     while(true){
@@ -71,7 +91,7 @@ int volga_vm::run(){
                 break;
             }
         }
-        if(cpuFlags & 0b00000001 == 1) return dtB0;
+        if(cpuFlags & hF == 1) return dtB0;
     }
 }
 
