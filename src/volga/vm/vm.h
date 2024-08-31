@@ -17,20 +17,20 @@ namespace paulq::volga{
 		
 
 		vm_byte regs[16];
-		vm_byte _procFlags, _dataBuff0, _dataBuff1, _readBuff, _stackPtr;
+		vm_byte cpuFlags, dtB0, dtB1, rdB, sPtr;
 
 		vm_addr aRegs[4];
-		vm_addr _addrBuff0, _addrBuff1, _progCount;
+		vm_addr adB0, adB1, pC;
 
 		const vm_addr halt = 0x8FFF;
 		const vm_addr con_out = 0x9000;
 		memory_block zp_blk, ram_blk, stack_blk, rom_blk;
 		const int mem_len = 0x10000;
 
-		const vm_byte _carryFlag = 0b10000000;
-		const vm_byte _zeroFlag = 0b01000000;
-		const vm_byte _negatFlag = 0b00100000;
-		const vm_byte _haltFlag = 0b00000001;
+		const vm_byte cF = 0b10000000;
+		const vm_byte zF = 0b01000000;
+		const vm_byte nF = 0b00100000;
+		const vm_byte hF = 0b00000001;
 
 		vm_byte read(vm_addr address); void write(vm_addr address, vm_byte data);
 		vm_addr readAddr(vm_addr address); void writeAddr(vm_addr address, vm_addr data);
